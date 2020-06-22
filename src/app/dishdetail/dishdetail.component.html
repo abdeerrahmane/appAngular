@@ -1,0 +1,104 @@
+<div class="container"
+    fxLayout="row wrap"
+    fxLayout.sm="column"
+    fxLayout.xs="column"
+    fxLayoutAlign.gt-md="space-around center"
+    fxLayoutGap="10px" 
+    fxLayoutGap.xs="0" >
+    <div [hidden]="dish || errMess">
+      <mat-spinner></mat-spinner><h4>Loading . . . Please Wait</h4>
+    </div>
+    <div fxFlex *ngIf="errMess">
+      <h2>Error</h2>
+      <h4>{{errMess}}</h4>
+    </div>
+    <div fxFlex="100" *ngIf="dish" [@expand]>
+      <div>
+        <h3>{{dish.name | uppercase}}</h3>
+        <hr>
+      </div>
+    </div>
+    
+  <div fxFlex="40"  [@visibility]="visibility">
+    <mat-card class="example-card" *ngIf="dish" [@expand]> 
+      <mat-card-header>  
+      <h3 >{{dish.name | uppercase}}</h3>
+      </mat-card-header>
+      <img mat-card-image  src="{{ baseURL + dish.image }}" alt={{dish.name}}>
+      <mat-card-content>
+        <p>
+          {{ dish.description }}
+        </p>
+      </mat-card-content>
+    
+      <mat-card-actions>
+        <button mat-button [routerLink]="['/dishdetail', prev]">
+              <span class="fa fa-chevron-left fa-lg"></span>
+        </button>
+        <button mat-button (click)="goBack()">
+              BACK
+        </button>
+        <button mat-button>
+          LIKE
+        </button>
+        <button mat-button>
+           SHARE
+        </button>
+        <span class="flex-spacer"></span>
+        <button mat-button [routerLink]="['/dishdetail', next]">
+           <span class="fa fa-chevron-right fa-lg"></span>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+  <div fxFlex="40" [@visibility]="visibility" >
+
+      <div fxLayout="column" fxLayoutAlign="center start" *ngIf="dish"  >
+       <h2>Comments</h2>
+          <mat-list role="list" *ngFor="let comm of dish.comments ">
+            <mat-list-item role="listitem">
+                <h5 mat-line>{{comm.comment}} </h5>
+                <p  mat-line>{{comm.rating}} Stars </p>
+                <p  mat-line>{{comm.author}} {{comm.date | date }} </p>
+            </mat-list-item>
+          </mat-list>
+      </div>
+      <div fxLayout="column" fxLayoutAlign="center start"  >
+           <mat-list role="list">
+             <mat-list-item role="listitem">
+                 
+                 <h5 mat-line >{{forAbdo.value.commentaire}} </h5>
+                 <p  mat-line>{{forAbdo.value.star }} Stars </p>
+                 <p  mat-line >{{forAbdo.value.name}}  </p>
+               
+             </mat-list-item>
+           </mat-list>
+       </div>
+      <div fxLayout="column"  >
+        <form novalidate [formGroup]="forAbdo"  #cform="ngForm"  #abdoForm="ngForm" (ngSubmit)="onValider()">
+            <mat-form-field class="example-full-width">
+              <mat-label>Name</mat-label>
+              <input matInput placeholder="Abderrahmane ZAYOUDI" formControlName="name"  type="text"  required>
+              <mat-icon matSuffix >mode_edit</mat-icon>
+              <mat-error *ngIf="Ferrors.name" >{{Ferrors.name}} </mat-error>
+            </mat-form-field>
+          
+            <mat-slider thumbLabel
+                        tickInterval="5"
+                        min="1"
+                        max="5"
+                        formControlName="star"
+                        flex ></mat-slider>
+        
+            <mat-form-field class="example-full-width">
+                <mat-label>Comment </mat-label>
+                <textarea matInput placeholder="Your comment ..." rows="5" formControlName="commentaire"  type="text"  required></textarea>
+                <mat-error *ngIf="Ferrors.commentaire" >{{Ferrors.commentaire}} </mat-error>
+                
+            </mat-form-field>
+            <span class="flex-spacer"></span>
+            <button type="submit" mat-button class="background-primary text-floral-white" [disabled]="abdoForm.form.invalid">Submit</button>
+      </form>
+   </div>
+   </div>
+</div>
